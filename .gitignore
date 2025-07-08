@@ -1,0 +1,28 @@
+# Node modules (these are huge, machine-specific & can be re-installed)
+backend/node_modules
+
+# Env file (you’ll create it later for DB URI, JWT secrets, etc.)
+backend/.env
+
+# Logs (runtime log files, usually for debugging)
+backend/logs
+backend/*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files (hidden junk files created by operating systems)
+Thumbs.db         # Windows
+
+# IDE/editor folders (your personal editor settings, not needed in repo)
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Coverage reports (generated during test coverage runs)
+coverage/
+
