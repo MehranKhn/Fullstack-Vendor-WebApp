@@ -37,11 +37,41 @@ const authController={
 
            }
            catch(e){
-             res.status(500).json({
+             console.log(e);
+             return res.status(500).json({
                 msg:"Something went wrong!"
             })
            }
+        },
+    login:async(req,res)=>{
+         const {email,password}=req.body;
+         try{
 
+             const userExists=await User.findOne({email});
+             if(!userExists){
+                return res.status(400).json({
+                    msg:"User doesn't exist!"
+                });
+             }
+             const isMatched=await userExists.matchPassword(password);
+             if(!isMatched){
+                return res.status(400).json({
+                    msg:"Incorrect Password"
+                });
+             }
+             const token=jwt.sign({id:userExists._id,email,role:userExists.role},JWT_SECRET,{expiresIn:'15m'});
+
+             res.status(200).json({
+                msg:"SuccessFully logged In",
+                token:`Bearer ${token}`
+             })
+         }
+         catch(e){
+            console.log(e);
+            return res.status(500).json({
+                msg:"Something went wrong"
+            })
+         }
     }
 }
 module.exports=authController;

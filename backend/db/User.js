@@ -30,6 +30,9 @@ userSchema.pre('save',async(next)=>{
     this.password=await bcrypt.hash(this.password,12);
     next();
 });
+userSchema.methods.matchPassword=async(enteredPassword)=>{
+    return await bcrypt.compare(enteredPassword,this.password);
+}
 
 const User=mongoose.model('User',userSchema);
 module.exports=User;
