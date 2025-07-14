@@ -9,7 +9,8 @@ const userSchema=new mongoose.Schema({
     email:{
         type:String,
         required:true,
-        trim:true
+        trim:true,
+        lowercase:true
     },
     password:{
         type:String,
@@ -26,22 +27,38 @@ const userSchema=new mongoose.Schema({
     },
     providerId:{
         type:String
+    },
+    resetPasswordToken:{
+        type:String
+    },
+    resetPasswordExpires:{
+        type:Date
     }
 },{timestamps:true});
 
-userSchema.index({email:1,providers:1},{unique:true});
+userSchema.index({email:1,provider:1},{unique:true});
 //Schema MiddleWare for hashing The password
 userSchema.pre('save',async function(next){
     if(this.provider!=='local') return next();
 
-    if(!this.isModified('password')) return next();
+    if(this.isModified('password')){
 
-    this.password=await bcrypt.hash(this.password,12);
+        this.password=await bcrypt.hash(this.password,12);
+    }
+
+    //if the resetPasswordToken exists
+    if(this.isModified('resetPasswordToken') && this.resetPasswordToken){
+        this.resetPasswordToken=await bcrypt.hash(this.resetPasswordToken,12);
+    }
     next();
 });
+
 userSchema.methods.matchPassword=async function(enteredPassword){
     return await bcrypt.compare(enteredPassword,this.password);
 }
 
+userSchema.methods.matchResetTokens=async function(resetToken){
+    return await bcrypt.compare(resetToken,this.resetPasswordToken);
+}
 const User=mongoose.model('User',userSchema);
 module.exports=User;

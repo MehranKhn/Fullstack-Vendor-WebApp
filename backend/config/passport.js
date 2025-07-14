@@ -7,18 +7,25 @@ const User=require('../db/User')
 passport.use(new googleStrategy({
     clientID:process.env.GOOGLE_CLIENT_ID,
     clientSecret:process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL:'/api/v1/auth/google/callback'
+    callbackURL:'/api/v1/auth/google/callback',
+    passReqToCallback: true
   },
-   async(accessToken,refreshToken,profile,done)=>{
+   async(req,accessToken,refreshToken,profile,done)=>{
       const email= profile.emails?.[0]?.value;
         try{
-            let user=await User.findOne({providerId:profile.id,provider:'google'});
+            let user=await User.findOne({
+              $or:[
+                {providerId:profile.id,provider:'google'},
+                {email,provider:'google'}
+              ]
+            });
             if(!user){
               user= await User.create({
                 name:profile.displayName,
                 providerId:profile.id,
                 email,
-                provider:'google'
+                provider:'google',
+                role:req.query.state
                });
             }
             done(null,user);
@@ -36,8 +43,9 @@ passport.use(new facebookStrategy({
     clientID: process.env.FACEBOOK_CLIENT_ID,
     clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
     callbackURL: '/api/v1/auth/facebook/callback',
-    profileFields: ['id', 'emails', 'name', 'displayName']
-}, async(accessToken,refreshToken,profile,done)=>{
+    profileFields: ['id', 'emails', 'name', 'displayName'],
+    passReqToCallback: true
+}, async(req,accessToken,refreshToken,profile,done)=>{
      try{
       let user=await User.findOne({
         $or:[
@@ -50,7 +58,8 @@ passport.use(new facebookStrategy({
           name:profile.displayName,
           email:profile.emails?.[0].value,
           providerId:profile.id,
-          provider:'facebook'
+          provider:'facebook',
+          role:req.query.state
         })
       }
       done(null,user);

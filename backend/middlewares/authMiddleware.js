@@ -3,7 +3,7 @@ const jwt=require('jsonwebtoken');
 function authMiddleware(req,res,next){
    const authHeader=req.headers.authorization;
 
-   if(!authHeader || !authHeader.startsWith('<Bearer> ')){
+   if(!authHeader || !authHeader.startsWith('Bearer ')){
     return res.status(401).json({
         msg:"Token not present"
     })
@@ -17,7 +17,7 @@ function authMiddleware(req,res,next){
             msg:"Tampered token"
           })
         }
-        req.user=payload;
+        req.id=payload.id;
         next();
     }
     catch(e){

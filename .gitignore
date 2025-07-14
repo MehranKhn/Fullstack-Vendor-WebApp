@@ -2,7 +2,7 @@
 backend/node_modules
 
 # Env file (you’ll create it later for DB URI, JWT secrets, etc.)
-backend/.env
+.env
 
 # Logs (runtime log files, usually for debugging)
 backend/logs
