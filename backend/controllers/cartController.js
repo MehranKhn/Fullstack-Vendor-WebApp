@@ -1,4 +1,5 @@
 const Cart=require('../db/Cart');
+const { updateOne } = require('../db/User');
 
 const cartController={
     addItem: async(req,res)=>{
@@ -71,6 +72,42 @@ const cartController={
                 msg:"Something went wrong"
             })
         }
+    },
+    deleteItem: async(req,res)=>{
+        const userId=req.id;
+        const vendorCardId=req.body.vendorCardId;
+        try{
+            await Cart.updateOne({userId},{$pull:{products:{vendorCardId:vendorCardId}}});
+            res.status(200).json({
+                msg:"Removed Succesfully"
+            })
+        }
+        catch(e){
+            console.log(e);
+            res.status(500).json({
+                msg:"Something went wrong"
+            })
+        }
+    },
+    getItems:async(req,res)=>{
+        const userId=req.id
+        try{
+            const cart=await Cart.findOne({userId}).populate('products.vendorCardId');
+            if(!cart){
+                return res.status(404).json({
+                    msg:"No Cart found"
+                })
+            }
+            res.status(200).json({
+                msg: "Cart fetched successfully",
+                cart: cart.products
+            });
+
+        }
+        catch (e) {
+            console.log(e);
+            res.status(500).json({ msg: "Something went wrong" });
+       }
     }
 }
 module.exports=cartController;
