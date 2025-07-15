@@ -12,9 +12,9 @@ const cartController={
                     msg:"Item added to the Cart"
                 })
             }
-            const product=cart.products.find(product=>product.vendorCardId==vendorCardId);
+            const product=cart.products.find(product=>product.vendorCardId.toString()==vendorCardId);
             if(product){
-                product?.quantity+=1;
+                product.quantity+=1;
             }
             else{
                 cart.products.push({vendorCardId,quantity:1,priceAtTime});
@@ -27,6 +27,47 @@ const cartController={
         catch(e){
             console.log(e);
             return res.status(500).json({
+                msg:"Something went wrong"
+            })
+        }
+    },
+    incQuantity: async(req,res)=>{
+        const vendorCardId=req.body.vendorCardId;
+        const userId=req.id;
+        try{
+            const cart=await Cart.findOne({userId});
+            const product= cart.products.find(product=>product.vendorCardId.toString()==vendorCardId);
+            product.quantity+=1
+            await cart.save();
+            res.status(200).json({
+                msg:"Incremented the quantity By 1"
+            })
+        }
+        catch(e){
+            console.log(e);
+            res.status(500).json({
+                msg:"Something went wrong"
+            })
+        }
+    },
+    decQuantity: async(req,res)=>{
+        const vendorCardId=req.body.vendorCardId;
+        const userId=req.id;
+        try{
+            const cart=await Cart.findOne({userId});
+            const product= cart.products.find(product=>product.vendorCardId.toString()==vendorCardId);
+            
+            if(product.quantity>1){
+                product.quantity-=1
+            }
+            await cart.save();
+            res.status(200).json({
+                msg:"decremented the quantity By 1"
+            })
+        }
+        catch(e){
+            console.log(e);
+            res.status(500).json({
                 msg:"Something went wrong"
             })
         }
