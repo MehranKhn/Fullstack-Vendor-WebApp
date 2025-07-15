@@ -32,3 +32,4 @@ const vendorController=
             }
         }
     }
+    module.exports=vendorController

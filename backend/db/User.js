@@ -36,11 +36,10 @@ const userSchema=new mongoose.Schema({
        type:{
         type:String,
         enum:['Point'],
-        default:'point'
+        default:'Point'
        },
        coordinates:{
         type:[Number],//longitude and latitude
-         required:true,
        },
        address:{
         type:String,
@@ -48,7 +47,6 @@ const userSchema=new mongoose.Schema({
     },
     bio:{
         type:String,
-        required:true,
         trim:true
     },
     resetPasswordToken:{
@@ -61,7 +59,7 @@ const userSchema=new mongoose.Schema({
 
 userSchema.index({email:1,provider:1},{unique:true});
 userSchema.index({location:'2dsphere'});
-//Schema MiddleWare for hashing The password
+// Schema MiddleWare for hashing The password
 userSchema.pre('save',async function(next){
     if(this.provider!=='local') return next();
 

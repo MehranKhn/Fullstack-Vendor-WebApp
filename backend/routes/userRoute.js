@@ -6,5 +6,8 @@ const authMiddleware=require('../middlewares/authMiddleware');
 
 userRouter.post('/updateProfile',authMiddleware,userController.updateProfile)
 userRouter.post('/addItem',authMiddleware,cartController.addItem);
+userRouter.post('/Inc',cartController.incQuantity)
+userRouter.post('/dec',cartController.decQuantity)
+userRouter.get('/getItems',cartController.getItems)
 
 module.exports=userRouter;

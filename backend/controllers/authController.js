@@ -30,7 +30,7 @@ const authController={
                     msg:"User already exists"
                   })
                }
-               const user=await User.create({name,email,password,role});
+               const user=await User.create({name,email,password,role,provider:'local'});
                const token=jwt.sign({id:user._id,email:user.email,role:user.role}, JWT_SECRET,{expiresIn:'15m'});
 
                   res.status(200).json({

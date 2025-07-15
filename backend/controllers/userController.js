@@ -3,12 +3,12 @@ const User= require('../db/User');
 const userController={
     updateProfile: async (req,res)=>{
         try{
-                const user= await User.findByIdAndUpdate(req.id,req.body,{new:true});
+                const user= await User.findByIdAndUpdate(req.id,{$set:req.body},{runValidators:true,new:true}).select('-password');
                 if(!user){
                      return res.status(404).json({ msg: "User not found" });
                 }
                 res.status(200).json({
-                    msg:"Updation done",
+                    msg:"profile updated",
                     user
                 })
 

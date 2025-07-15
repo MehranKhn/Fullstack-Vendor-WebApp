@@ -1,5 +1,4 @@
 const Cart=require('../db/Cart');
-const { updateOne } = require('../db/User');
 
 const cartController={
     addItem: async(req,res)=>{
