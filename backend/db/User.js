@@ -32,19 +32,19 @@ const userSchema=new mongoose.Schema({
        type:String,
        default:'/default-avatar.png'
     },
-    location:{
-       type:{
-        type:String,
-        enum:['Point'],
-        default:'Point'
-       },
-       coordinates:{
-        type:[Number],//longitude and latitude
-       },
-       address:{
-        type:String,
-       }
-    },
+    // location:{
+    //    type:{
+    //     type:String,
+    //     enum:['Point'],
+    //     default:'Point'
+    //    },
+    //    coordinates:{
+    //     type:[Number],//longitude and latitude
+    //    },
+    //    address:{
+    //     type:String,
+    //    }
+    // },
     bio:{
         type:String,
         trim:true
@@ -58,7 +58,7 @@ const userSchema=new mongoose.Schema({
 },{timestamps:true});
 
 userSchema.index({email:1,provider:1},{unique:true});
-userSchema.index({location:'2dsphere'});
+// userSchema.index({location:'2dsphere'});
 // Schema MiddleWare for hashing The password
 userSchema.pre('save',async function(next){
     if(this.provider!=='local') return next();

@@ -17,8 +17,8 @@ function authMiddleware(req,res,next){
             msg:"Tampered token"
           })
         }
-        req.id=payload.id;
-        next();
+        req.user=payload;
+        return next();
     }
     catch(e){
          res.status(401).json({
