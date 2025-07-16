@@ -77,9 +77,10 @@ const cartController={
         const userId=req.user.id;
         const vendorCardId=req.params.vendorCardId;
         try{
-            await Cart.updateOne({userId},{$pull:{products:{vendorCardId:vendorCardId}}});
+            const updatedCart=await Cart.findOneAndUpdate({userId},{$pull:{products:{vendorCardId:vendorCardId}}},{new:true,runValidators:true});
             res.status(200).json({
-                msg:"Removed Succesfully"
+                msg:"Removed Succesfully",
+                updatedCart
             })
         }
         catch(e){

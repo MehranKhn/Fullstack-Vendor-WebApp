@@ -9,6 +9,6 @@ userRouter.post('/addItem/:vendorCardId',authMiddleware,cartController.addItem);
 userRouter.post('/Inc/:vendorCardId',authMiddleware,cartController.incQuantity)
 userRouter.post('/dec',authMiddleware,cartController.decQuantity)
 userRouter.get('/getItems',authMiddleware,cartController.getItems)
-userRouter.delete('/deleteItem:vendorCardId',authMiddleware,cartController.deleteItem);
+userRouter.delete('/deleteItem/:vendorCardId',authMiddleware,cartController.deleteItem);
 
 module.exports=userRouter;
