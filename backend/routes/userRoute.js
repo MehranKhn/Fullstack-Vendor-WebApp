@@ -4,7 +4,7 @@ const userController=require('../controllers/userController')
 const cartController=require('../controllers/cartController')
 const authMiddleware=require('../middlewares/authMiddleware');
 
-userRouter.post('/updateProfile',authMiddleware,userController.updateProfile)
+userRouter.put('/updateProfile',authMiddleware,userController.updateProfile)
 userRouter.post('/addItem',authMiddleware,cartController.addItem);
 userRouter.post('/Inc',cartController.incQuantity)
 userRouter.post('/dec',cartController.decQuantity)

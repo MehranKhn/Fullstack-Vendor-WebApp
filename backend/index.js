@@ -11,8 +11,9 @@ require('./config/passport')
 const mainRouter=require('./routes');
 const PORT=process.env.PORT || 3000
 const MONGO_URL=process.env.MONGO_URL;
-app.use(express.static('public'));
+const path = require('path');
 app.use(express.json());
+app.use(express.static(path.join(__dirname,'public')));
 app.use(cors());
 app.use(passport.initialize());
 
