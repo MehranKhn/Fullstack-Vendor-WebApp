@@ -2,8 +2,9 @@ const Cart=require('../db/Cart');
 
 const cartController={
     addItem: async(req,res)=>{
-        const {vendorCardId,priceAtTime}=req.body;
-        const userId=req.id;
+        const priceAtTime=req.body.priceAtTime;
+        const vendorCardId=req.params.vendorCardId;
+        const userId=req.user.id;
         try{
            let cart=await Cart.findOne({userId});
             if(!cart){
@@ -32,8 +33,8 @@ const cartController={
         }
     },
     incQuantity: async(req,res)=>{
-        const vendorCardId=req.body.vendorCardId;
-        const userId=req.id;
+       const vendorCardId=req.params.vendorCardId;
+        const userId=req.user.id;
         try{
             const cart=await Cart.findOne({userId});
             const product= cart.products.find(product=>product.vendorCardId.toString()==vendorCardId);
@@ -51,8 +52,8 @@ const cartController={
         }
     },
     decQuantity: async(req,res)=>{
-        const vendorCardId=req.body.vendorCardId;
-        const userId=req.id;
+        const vendorCardId=req.params.vendorCardId;
+        const userId=req.user.id;
         try{
             const cart=await Cart.findOne({userId});
             const product= cart.products.find(product=>product.vendorCardId.toString()==vendorCardId);
@@ -73,8 +74,8 @@ const cartController={
         }
     },
     deleteItem: async(req,res)=>{
-        const userId=req.id;
-        const vendorCardId=req.body.vendorCardId;
+        const userId=req.user.id;
+        const vendorCardId=req.params.vendorCardId;
         try{
             await Cart.updateOne({userId},{$pull:{products:{vendorCardId:vendorCardId}}});
             res.status(200).json({
@@ -89,7 +90,7 @@ const cartController={
         }
     },
     getItems:async(req,res)=>{
-        const userId=req.id
+        const userId=req.user.id
         try{
             const cart=await Cart.findOne({userId}).populate('products.vendorCardId');
             if(!cart){

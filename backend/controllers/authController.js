@@ -31,7 +31,7 @@ const authController={
                   })
                }
                const user=await User.create({name,email,password,role,provider:'local'});
-               const token=jwt.sign({id:user._id,email:user.email,role:user.role}, JWT_SECRET,{expiresIn:'15m'});
+               const token=jwt.sign({id:user._id,email:user.email,role:user.role}, JWT_SECRET,{expiresIn:'45m'});
 
                   res.status(200).json({
                     msg:"User created Successfully",
@@ -62,7 +62,7 @@ const authController={
                     msg:"Incorrect Password"
                 });
              }
-             const token=jwt.sign({id:userExists._id,email,role:userExists.role},JWT_SECRET,{expiresIn:'15m'});
+             const token=jwt.sign({id:userExists._id,email,role:userExists.role},JWT_SECRET,{expiresIn:'45m'});
 
              res.status(200).json({
                 msg:"SuccessFully logged In",
@@ -78,7 +78,7 @@ const authController={
     },
     me: async(req,res)=>{
         try{
-            const user= await User.findById(req.id).select('-password');
+            const user= await User.findById(req.user.id).select('-password');
             if(!user){
                 return res.status(404).json({
                     msg:"User Not found, please signup"
