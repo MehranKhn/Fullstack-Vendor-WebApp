@@ -35,5 +35,5 @@ const vendorCardSchema=new mongoose.Schema({
 }, {timestamps:true});
 
 const vendorCard=mongoose.model('vendorCard',vendorCardSchema);
-
+vendorCardSchema.index({category:$text,location:$text})
 module.exports=vendorCard;

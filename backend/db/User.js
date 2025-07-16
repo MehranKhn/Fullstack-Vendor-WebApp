@@ -57,6 +57,7 @@ const userSchema=new mongoose.Schema({
     }
 },{timestamps:true});
 
+userSchema.index({name:$text})
 userSchema.index({email:1,provider:1},{unique:true});
 // userSchema.index({location:'2dsphere'});
 // Schema MiddleWare for hashing The password

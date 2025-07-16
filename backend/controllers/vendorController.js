@@ -3,25 +3,33 @@ const User=require('../db/User');
 const vendorCard = require('../db/vendorCard');
 const vendorController=
  {
-    search: async(req,res)=>{
+    search: async(req,res)=>{ //for advanced searching we can create a separte seraching collection
         const filter=req.body.filter ||"";
         try{
-            let query={}
-
             if(filter){
-                query={
-                    name:{$regex:filter,$options:'i'},
-                    role:'vendor'
-                }
-                const users=await User.find(query).select('name email avatar role');
+               const userQuery={
+                $text:{$search:filter},role:'vendor'  
+            };
+            //$text-->text index-->builds  a special inverted index resulting very fast and relevant searching
+
+               const cardQuery={
+                 $text:{$search:filter}
+                };
+
+                const [vendors,cards]=await Promise.all([
+                    User.find(userQuery).select('name email avatar role'),
+                    vendorCard.find(cardQuery).select('-_id')
+                ]);
 
                    return res.status(200).json({
-                       users
+                       vendors,
+                       cards
                    })
                 }
                 else{
                     res.status(200).json({
-                        users:[]
+                        vendors:[],
+                        cards:[]
                     })
                 }
             }
