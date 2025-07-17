@@ -19,4 +19,6 @@ vendorRouter.put('/update/card/:cardId',authMiddleware,roleMiddleware,vendorCont
 
 vendorRouter.delete('/delete/card/:cardId',authMiddleware,roleMiddleware,vendorController.deleteCard)
 
+vendorRouter.get('/cards',authMiddleware,roleMiddleware,vendorController.getRandomCards)
+
 module.exports=vendorRouter;

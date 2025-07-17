@@ -137,6 +137,51 @@ const vendorController=
                         msg:"Something went Wrong"
                     })
                   }
+            },
+            getRandomCards:async (req,res)=>{
+                const category=req.query.category;
+                try{
+                    const categoryBasedCards=vendorCard.aggregate([
+                        {
+                            $match:{category}
+                        },
+                        {
+                            $lookup:{
+                                from:"reviews",
+                                localField:"_id",
+                                foreignField:"cardId",
+                                as:"cardDetails"
+                            }
+                        },
+                        {
+                            $unwind:{
+                                path:"$cardDetails",
+                                preserveNullAndEmptyArrays: true
+                            }
+                        },
+                        {
+                            $group:{
+                                _id:"$_id",
+                                title:{$first:"$title"},
+                                description:{$first:"$description"},
+                                location:{$first:"$location"},
+                                avgRatings:{$avg:"$cardDetails.ratings"},
+                                comments:{$push:{text:"$cardDetails.comment",userId:"$cardDetails.userId"}},
+                                price:{$first:"$price"}
+                            }
+                        }
+                    ]);
+                    res.status(200).json({
+                        msg:`${category} fetched succesfully`,
+                        categoryBasedCards
+                    })
+                }
+                catch(e){
+                    console.log(e);
+                    res.status(500).json({
+                        msg:`Something went wrong`,
+                    })
+                }
             }
          }
 
